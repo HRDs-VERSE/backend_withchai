@@ -1,6 +1,6 @@
 import {v2 as cloudinary} from "cloudinary"
 import fs from "fs"
-import { ApiError } from "./ApiError";
+import { ApiError } from "./ApiError.js";
 
 
 
@@ -34,9 +34,7 @@ const deleteFromCloudinary = async(localFilePath) =>{
             throw new ApiError(400, "File path missing")
         }
 
-        const response = await cloudinary.uploader.destroy(localFilePath, {
-            resource_type: "auto"
-        })
+        const response = await cloudinary.uploader.destroy(localFilePath)
         console.log("File deleted from cloudinary successfully")
         return response
     } catch (error) {

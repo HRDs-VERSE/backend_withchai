@@ -325,13 +325,26 @@ const updateUserAvatar = asyncHandler(async(req, res) => {
 
 const updateUserCoverImage = asyncHandler(async(req, res) => {
     const coverImageLocalPath = req.file?.path
+    console.log(coverImageLocalPath)
 
     if (!coverImageLocalPath) {
         throw new ApiError(400, "Cover image file is missing")
     }
 
-    //TODO: delete old image - assignment
+    const user = await User.findById(req.user?._id).select("coverImage")
+    const coverImageURL = user?.coverImage
 
+    if (!coverImageURL) {
+        throw new ApiError(404, "old coverImage not found")
+    }
+
+    if (coverImageURL){
+        try {
+            await deleteFromCloudinary(coverImageURL)
+        } catch (error) {
+            throw new ApiError(400, error?.message || "Erron while deleting old Cover Image")
+        }
+    }
 
     const coverImage = await uploadOnCloudinary(coverImageLocalPath)
 
@@ -340,7 +353,7 @@ const updateUserCoverImage = asyncHandler(async(req, res) => {
         
     }
 
-    const user = await User.findByIdAndUpdate(
+    const updateduser = await User.findByIdAndUpdate(
         req.user?._id,
         {
             $set:{
@@ -353,7 +366,7 @@ const updateUserCoverImage = asyncHandler(async(req, res) => {
     return res
     .status(200)
     .json(
-        new ApiResponse(200, user, "Cover image updated successfully")
+        new ApiResponse(200, updateduser, "Cover image updated successfully")
     )
 })
 
@@ -472,7 +485,7 @@ const getWatchHistory = asyncHandler( async (req, res) => {
 
     return res
     .status(200)
-    .json(ApiResponse(200, user[0].watchHistory, "watch history fetched successfully"))
+    .json(new ApiResponse(200, user[0].watchHistory, "watch history fetched successfully"))
 })
 
 
