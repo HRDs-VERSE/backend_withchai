@@ -431,7 +431,7 @@ const getUserChannelProfile = asyncHandler( async (req, res) => {
         }
     ])
 
-    if (!channel.length) {
+    if (!channel?.length) {
         throw new ApiError(404, "Channel dose not exits")
     }
 
@@ -444,7 +444,7 @@ const getWatchHistory = asyncHandler( async (req, res) => {
     const user = await User.aggregate([
         {
             $match: {
-                _id: new mongoose.Types.ObjectId(req.user._id)
+                _id: new mongoose.Types.ObjectId(req.user?._id)
             } 
         },
         {
@@ -452,7 +452,7 @@ const getWatchHistory = asyncHandler( async (req, res) => {
                 from: "videos",
                 localField: "watchHistory",
                 foreignField: "_id",
-                as: "watchHistory",
+                as: "watchHistory", 
                 pipeline: [
                     {
                         $lookup: {
