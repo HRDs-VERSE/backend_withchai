@@ -132,34 +132,54 @@ const getLikedVideos = asyncHandler(async (req, res) => {
     const likedVideos = await Like.aggregate([
 
         {
-            $group: {
-                _id: "$video"
+            $match: {
+                likedBy: new mongoose.Types.ObjectId(req.user?._id),
+                video: { $exists: true }
             }
-        },
-        {
-            $unwind: "$_id"
         },
         {
             $lookup: {
                 from: "videos",
-                localField: "_id",
+                localField: "video",
                 foreignField: "_id",
-                as: "videoData"
+                as: "likedVideos",
+                pipeline: [
+                    {
+                        $lookup: {
+                            from: "users",
+                            localField: "owner",
+                            foreignField: "_id",
+                            as: "userDetails"
+                        }
+                    },
+                    {
+                        $unwind: "$userDetails"
+                    }
+                ]
             }
         },
         {
-            $unwind: "$videoData"
+            $unwind: "$likedVideos"
+        },
+        {
+            $sort: { createdAt: -1 } // Specify the field to sort on and the direction (descending)
         },
         {
             $project: {
-                _id: 1,
-                videoData: {
-                    videoFile: 1,
+                _id: 0,
+                likedVideos: {
                     title: 1,
                     description: 1,
-                    isPublished: 1,
                     duration: 1,
-                    thumbNail: 1
+                    views: 1,
+                    "videoFile.url": 1,
+                    "thumbNail.url": 1,
+                    userDetails: {
+                        username: 1,
+                        fullName: 1,
+                        email: 1,
+                        avatar: 1
+                    }
                 }
             }
         }
@@ -170,7 +190,7 @@ const getLikedVideos = asyncHandler(async (req, res) => {
             new ApiResponse(
                 404,
                 null,
-                `No Liked found for User`
+                `No Liked video found for User`
             )
         );
     }
