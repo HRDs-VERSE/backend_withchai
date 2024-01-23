@@ -74,13 +74,13 @@ and also combines the tweet functionality from twitter into it. Find more about 
 1. **Clone the repository:**
 
     ```bash
-    git clone https://github.com/Hruthik-28/youtube-twitter.git
+    https://github.com/HRDs-VERSE/backend_withchai.git
     ```
 
 2. **Install dependencies:**
 
     ```bash
-    cd youtube-twitter
+    cd backend_withchai/project
     npm install
     ```
 
