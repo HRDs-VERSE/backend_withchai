@@ -2,8 +2,8 @@
 
 ## Introduction
 
-This is a ``YOUTUBE + TWITTER`` backend project that covers allmost the functionalities of youtube 
-and also combines the tweet functionality from twitter into it. Find more about his project in the documentaion below.
+This is a ``YOUTUBE + TWITTER`` backend project that covers almost all the functionalities of YouTube 
+and combines Twitter's tweet functionality into it. You can find more about his project in the documentation below.
 
 ## Important links
 
@@ -85,7 +85,7 @@ and also combines the tweet functionality from twitter into it. Find more about 
     ```
 
 3. **Set up environment variables:**
-    Create a .env in root of project and fill in the required values in the .env file using .env.sample file
+    Create a .env in the root of the project and fill in the required values in the .env file using the .env.sample file
 
 4. **Start the server:**
 
